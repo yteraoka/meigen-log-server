@@ -90,5 +90,8 @@ func main() {
 	}
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	log.Debug().Msgf("listening %s:%s", listenAddr, listenPort)
-	http.ListenAndServe(listenAddr+":"+listenPort, nil)
+	err := http.ListenAndServe(listenAddr+":"+listenPort, nil)
+	if err != nil {
+		log.Fatal().Err(err).Msg("")
+	}
 }
