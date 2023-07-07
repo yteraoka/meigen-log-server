@@ -47,10 +47,12 @@ func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	var err error
+
 	nLogs := 1
 	nLogsQuery, ok := r.URL.Query()["n"]
+
 	if ok {
-		var err error
 		nLogs, err = strconv.Atoi(nLogsQuery[0])
 		if err != nil {
 			nLogs = 1
@@ -59,15 +61,52 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	for i := 0; i < nLogs; i++ {
-		meigen, author, err := getMeigen()
+	length := 0
+	lengthQuery, ok := r.URL.Query()["length"]
+
+	if ok {
+		length, err = strconv.Atoi(lengthQuery[0])
 		if err != nil {
-			log.Error().Err(err).Msg("failed to get meigen")
-			break
+			length = 0
+			log.Warn().Str("uri", r.RequestURI).Str("method", r.Method).
+				Err(err).Msgf("failed to atoi length parameter: %q", lengthQuery[0])
 		}
+	}
+
+	for i := 0; i < nLogs; i++ {
+		meigen := ""
+		author := ""
+		tmp := ""
+		if length == 0 {
+			meigen, author, err = getMeigen()
+			if err != nil {
+				log.Error().Err(err).Msg("failed to get meigen")
+				break
+			}
+		} else if length > 0 {
+			for {
+				tmp, author, err = getMeigen()
+				if err != nil {
+					log.Error().Err(err).Msg("failed to get meigen")
+					break
+				}
+				if len(meigen) == 0 {
+					meigen = tmp + " by " + author
+				} else {
+					meigen = meigen + ";; " + tmp + " by " + author
+				}
+				if len(meigen) > length {
+					break
+				}
+			}
+			author = ""
+		}
+
 		u, _ := uuid.NewRandom()
+
 		log.Info().Str("uri", r.RequestURI).Str("method", r.Method).
-			Str("author", author).Str("uuid", u.String()).Msg(meigen)
+			Str("author", author).Str("uuid", u.String()).
+			Str("length", strconv.Itoa(len(meigen))).Msg(meigen)
 	}
 
 	w.WriteHeader(http.StatusOK)
