@@ -1,6 +1,6 @@
 module github.com/yteraoka/meigen-log-server
 
-go 1.19
+go 1.20
 
 require (
 	github.com/google/uuid v1.3.0
@@ -8,7 +8,7 @@ require (
 )
 
 require (
-	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 )
