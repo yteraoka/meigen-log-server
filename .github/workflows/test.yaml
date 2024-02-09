@@ -30,7 +30,7 @@ jobs:
 
       - name: golangci-lint
         # https://github.com/golangci/golangci-lint-action
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
 
   build:
     name: Build container image
