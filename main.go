@@ -28,7 +28,7 @@ func getMeigen() (meigen, author string, err error) {
 	if err != nil {
 		return "", "", err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", "", err
@@ -43,7 +43,7 @@ func getMeigen() (meigen, author string, err error) {
 
 func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, `{"status":"ok","version":"%s"}`, version)
+	fmt.Fprintf(w, `{"status":"ok","version":"%s"}`, version) //nolint:errcheck
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
