@@ -1,6 +1,6 @@
 module github.com/yteraoka/meigen-log-server
 
-go 1.20
+go 1.25
 
 require (
 	github.com/google/uuid v1.6.0
